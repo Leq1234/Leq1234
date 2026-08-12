@@ -6,7 +6,7 @@ import { useRecordStore } from '@/stores/useRecordStore';
 import { useCategoryStore } from '@/stores/useCategoryStore';
 import { useSettingStore } from '@/stores/useSettingStore';
 import { exportRecordsToCsv } from '@/services/exportService';
-import { CURRENCIES } from '@/utils/constants';
+import { CURRENCIES, AVATAR_LIST } from '@/utils/constants';
 
 interface MenuEntry {
   icon: string;
@@ -21,7 +21,36 @@ export default function ProfilePage() {
   const categories = useCategoryStore((s) => s.categories);
   const currency = useSettingStore((s) => s.currency);
   const setCurrency = useSettingStore((s) => s.setCurrency);
+  const userName = useSettingStore((s) => s.userName);
+  const userAvatar = useSettingStore((s) => s.userAvatar);
+  const setUserName = useSettingStore((s) => s.setUserName);
+  const setUserAvatar = useSettingStore((s) => s.setUserAvatar);
   const [currencyVisible, setCurrencyVisible] = useState(false);
+  const [profileVisible, setProfileVisible] = useState(false);
+  const [draftName, setDraftName] = useState(userName);
+  const [draftAvatar, setDraftAvatar] = useState(userAvatar);
+
+  const openProfileEditor = () => {
+    setDraftName(userName);
+    setDraftAvatar(userAvatar);
+    setProfileVisible(true);
+  };
+
+  const saveProfile = () => {
+    const name = draftName.trim();
+    if (!name) {
+      Toast.show({ content: '昵称不能为空', duration: 1000 });
+      return;
+    }
+    if (name.length > 12) {
+      Toast.show({ content: '昵称最多 12 个字', duration: 1000 });
+      return;
+    }
+    setUserName(name);
+    setUserAvatar(draftAvatar);
+    setProfileVisible(false);
+    Toast.show({ content: '已保存个人资料', duration: 800 });
+  };
 
   const menu: MenuEntry[] = [
     {
@@ -77,20 +106,25 @@ export default function ProfilePage() {
     <div>
       <Header title="我的" isBack={false} />
 
-      <div className="mx-4 mt-3 rounded-lg bg-card p-5 shadow-card flex items-center gap-4">
+      <button
+        className="mx-4 mt-3 rounded-lg bg-card p-5 shadow-card flex items-center gap-4 w-[calc(100%-2rem)] text-left btn-press active:bg-page"
+        onClick={openProfileEditor}
+        aria-label="编辑个人资料"
+      >
         <span
           className="w-16 h-16 rounded-full bg-gradient-to-br from-primary-light to-peach flex items-center justify-center text-3xl shadow-card"
           aria-hidden="true"
         >
-          🐎
+          {userAvatar}
         </span>
-        <div>
-          <div className="text-lg font-bold text-ink">记账小能手</div>
+        <div className="flex-1 min-w-0">
+          <div className="text-lg font-bold text-ink truncate">{userName}</div>
           <div className="text-xs text-ink-tertiary mt-1">
-            已记录 {records.length} 笔 · 坚持记账每一天
+            已记录 {records.length} 笔 · 点击编辑
           </div>
         </div>
-      </div>
+        <span className="text-ink-tertiary text-lg leading-none">›</span>
+      </button>
 
       <section className="mx-4 mt-3 rounded-lg bg-card shadow-card divide-y divide-divider overflow-hidden">
         {menu.map((item) => (
@@ -144,6 +178,59 @@ export default function ProfilePage() {
                 </span>
               </button>
             ))}
+          </div>
+        </div>
+      </Popup>
+
+      <Popup
+        visible={profileVisible}
+        onMaskClick={() => setProfileVisible(false)}
+        bodyClassName="popup-body"
+        position="bottom"
+      >
+        <div className="px-4 py-5">
+          <div className="text-base font-semibold text-ink text-center mb-4">编辑个人资料</div>
+
+          <div className="text-sm font-medium text-ink mb-2">选择头像</div>
+          <div className="grid grid-cols-8 gap-2 mb-5">
+            {AVATAR_LIST.map((emoji) => (
+              <button
+                key={emoji}
+                className={`aspect-square rounded-full flex items-center justify-center text-2xl btn-press active:scale-95 ${
+                  draftAvatar === emoji
+                    ? 'bg-primary-light ring-2 ring-primary'
+                    : 'bg-page'
+                }`}
+                onClick={() => setDraftAvatar(emoji)}
+                aria-label={`选择头像 ${emoji}`}
+              >
+                {emoji}
+              </button>
+            ))}
+          </div>
+
+          <div className="text-sm font-medium text-ink mb-2">昵称</div>
+          <input
+            className="w-full h-11 px-3 rounded-md border border-divider bg-page text-sm text-ink outline-none focus:border-primary"
+            value={draftName}
+            maxLength={12}
+            placeholder="请输入昵称"
+            onChange={(e) => setDraftName(e.target.value)}
+          />
+
+          <div className="flex gap-3 mt-5">
+            <button
+              className="flex-1 h-11 rounded-full bg-page border border-divider text-sm text-ink btn-press active:bg-ink-tertiary/10"
+              onClick={() => setProfileVisible(false)}
+            >
+              取消
+            </button>
+            <button
+              className="flex-1 h-11 rounded-full bg-primary text-white text-sm font-medium btn-press active:bg-primary-dark"
+              onClick={saveProfile}
+            >
+              保存
+            </button>
           </div>
         </div>
       </Popup>
