@@ -174,7 +174,10 @@ export default function SnakeGamePage() {
           </div>
         </div>
 
-        <div className="relative mt-3 rounded-lg overflow-hidden aspect-square bg-ink-primary/95">
+        <div
+          className="relative mt-3 rounded-lg overflow-hidden aspect-square bg-ink-primary/95 mx-auto"
+          style={{ width: 'min(100%, calc(100vh - 29rem))' }}
+        >
           <div
             className="w-full h-full grid"
             style={{ gridTemplateColumns: `repeat(${GRID_SIZE}, 1fr)` }}
