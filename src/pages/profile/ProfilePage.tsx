@@ -54,6 +54,12 @@ export default function ProfilePage() {
 
   const menu: MenuEntry[] = [
     {
+      icon: '🐍',
+      label: '贪吃蛇小游戏',
+      desc: '记账累了？来玩一局放松一下',
+      action: () => navigate('/game')
+    },
+    {
       icon: '📒',
       label: '账本管理',
       desc: '创建、切换与管理账本',

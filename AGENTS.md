@@ -69,6 +69,7 @@
 | 记录详情 | `/detail/:id` | `src/pages/detail/RecordDetailPage.tsx` |
 | 分类管理 | `/categories` | `src/pages/categories/CategoriesPage.tsx` |
 | 账单导入 | `/import` | `src/pages/import/ImportPage.tsx` |
+| 贪吃蛇小游戏 | `/game` | `src/pages/game/SnakeGamePage.tsx` |
 
 ---
 
