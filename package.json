@@ -1,9 +1,9 @@
 {
-  "name": "heima-account",
+  "name": "jizhang-app",
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "黑马记账 - 轻量级 H5 记账应用",
+  "description": "记账app - 轻量级 H5 记账应用",
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
