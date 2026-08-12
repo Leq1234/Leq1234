@@ -175,15 +175,16 @@ export default function SnakeGamePage() {
         </div>
 
         <div
-          className="relative mt-3 rounded-lg overflow-hidden aspect-square bg-ink-primary/95 mx-auto"
+          className="relative mt-3 rounded-lg overflow-hidden aspect-square bg-ink-primary/95 mx-auto border-2 border-white/50 shadow-card"
           style={{ width: 'min(100%, calc(100vh - 29rem))' }}
         >
           <div
             className="w-full h-full grid"
             style={{ gridTemplateColumns: `repeat(${GRID_SIZE}, 1fr)` }}
           >
-            {cells.map((k) =>
-              k === food ? (
+            {cells.map((k) => {
+              const [x, y] = k.split(',').map(Number);
+              return k === food ? (
                 <div key={k} className="bg-income rounded-full m-1 shadow-card" />
               ) : snakeSet.has(k) ? (
                 <div
@@ -193,9 +194,16 @@ export default function SnakeGamePage() {
                   }`}
                 />
               ) : (
-                <div key={k} />
-              )
-            )}
+                <div
+                  key={k}
+                  className={x > 0 && y > 0 && x < GRID_SIZE - 1 && y < GRID_SIZE - 1
+                    ? (x + y) % 2 === 0
+                      ? 'bg-white/[0.04] border-[0.5px] border-white/10'
+                      : 'border-[0.5px] border-white/10'
+                    : 'bg-ink-primary border-[0.5px] border-white/20'}
+                />
+              );
+            })}
           </div>
 
           {isOver && (
